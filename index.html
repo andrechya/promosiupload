@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Promotion Form</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      body {
+        background-color: #102c57;
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Container untuk desktop */
+      .container {
+        max-width: 978px !important;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Header image responsif */
+      .header-img {
+        border-radius: 0.375rem;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Card styling */
+      .card-custom {
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+      }
+
+      .btn-primary {
+        background: #102c57 !important;
+      }
+
+      .meta {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      /* Autocomplete dropdown styling */
+      #autocomplete-results {
+        position: relative;
+      }
+
+      .autocomplete-list {
+        padding: 10px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+
+      /* Menambahkan efek hover untuk item autocomplete */
+      .list-group-item-action:hover {
+        background-color: #173145 !important;
+        color: white !important;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      /* Preview Container */
+      #previewContainer {
+        position: relative;
+        z-index: 1;
+        display: none;
+      }
+
+      /* Preview wrapper */
+      .preview-wrapper {
+        position: relative;
+        display: inline-block;
+        z-index: 2;
+      }
+
+      .btn-remove-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        z-index: 3;
+      }
+
+      .btn-remove-image:hover {
+        background: rgba(255, 0, 0, 0.9);
+      }
+
+      /* Gambar preview */
+      #imagePreview {
+        max-height: 200px;
+        width: auto;
+        object-fit: contain;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* SweetAlert2 customizations */
+      .swal2-confirm.swal2-styled {
+        background-color: #173145 !important;
+        border: none !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(1, 77, 109, 0.4);
+      }
+
+      .swal2-confirm.swal2-styled:hover {
+        background-color: #102c57 !important;
+      }
+
+      .swal2-cancel.swal2-styled {
+        background-color: #6c757d !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3) !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .swal2-cancel.swal2-styled:hover {
+        background-color: #5a6268 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.4) !important;
+      }
+
+      .swal2-deny.swal2-styled {
+        background-color: var(--danger-color, #f5222d) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(245, 34, 45, 0.3) !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .swal2-deny.swal2-styled:hover {
+        background-color: #d81b29 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 8px rgba(245, 34, 45, 0.4) !important;
+      }
+
+      /* Mobile-specific styles */
+      @media (max-width: 768px) {
+        .container {
+          max-width: 100% !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+        }
+
+        .card-custom {
+          border-radius: 0;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          box-shadow: none;
+          border: none;
+          min-height: 100vh;
+        }
+
+        .header-img {
+          border-radius: 0;
+          margin-top: 0;
+          width: 100%;
+        }
+
+        .card-custom .card-body,
+        .card-custom .p-3 {
+          padding: 1rem !important;
+        }
+
+        .btn,
+        .form-control,
+        .form-select {
+          font-size: 16px;
+        }
+
+        .btn-lg {
+          padding: 0.75rem 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .card-custom .card-body,
+        .card-custom .p-3 {
+          padding: 0.75rem !important;
+        }
+
+        h1.card-title {
+          font-size: 1.25rem;
+        }
+
+        body {
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-3">
+      <img
+        class="header-img mb-3"
+        src="https://lh3.googleusercontent.com/d/1iYD1JrKvnUVQ70QSQWiYaEk_EPY3uJoP"
+        alt="Header Image"
+      />
+
+      <div class="card card-custom p-3">
+        <h1 class="card-title h5">Promotion Submission</h1>
+        <p class="card-text text-muted mb-3">
+          Isi form ini lewat HP. Tekan Dashboard untuk lihat progress
+          submission.
+        </p>
+
+        <form id="submissionForm">
+          <div class="mb-3">
+            <label for="salesName" class="form-label">Sales Name</label>
+            <input
+              id="salesName"
+              type="text"
+              class="form-control"
+              placeholder="Start typing sales name..."
+              autocomplete="off"
+              required
+            />
+            <div id="autocomplete-results"></div>
+          </div>
+
+          <div class="mb-3">
+            <label for="salperId" class="form-label">Salper ID</label>
+            <input
+              id="salperId"
+              type="text"
+              class="form-control"
+              readonly
+              placeholder="Will be filled when you pick a name"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select id="category" class="form-select" required>
+              <option value="">-- choose category --</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="promotionTitle" class="form-label"
+              >Promotion Title</label
+            >
+            <select id="promotionTitle" class="form-select" required>
+              <option value="">-- choose promotion --</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment (optional)</label>
+            <textarea
+              id="comment"
+              class="form-control"
+              rows="3"
+              placeholder="Add a note..."
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="imageInput" class="form-label"
+              >Upload Image (Mandatory)</label
+            >
+            <input
+              id="imageInput"
+              type="file"
+              class="form-control"
+              accept="image/*"
+            />
+          </div>
+
+          <!-- Preview Container dengan tombol hapus -->
+          <div class="mb-3 text-center" id="previewContainer">
+            <div class="preview-wrapper">
+              <img
+                id="imagePreview"
+                alt="Image Preview"
+                class="img-fluid rounded shadow-sm"
+                style="max-height: 200px; width: auto; object-fit: contain"
+              />
+              <button
+                type="button"
+                class="btn-remove-image"
+                onclick="removeImage()"
+              >
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button
+              id="submitBtn"
+              class="btn btn-primary btn-lg w-100"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+
+        <div class="d-flex gap-2 mt-3">
+          <a
+            id="openDashboard"
+            class="btn btn-sm btn-outline-primary w-100"
+            target="_blank"
+            >Open Dashboard</a
+          >
+        </div>
+
+        <div class="meta" id="statusArea"></div>
+      </div>
+    </div>
+
+    <script>
+      // CONFIG - GANTI DENGAN URL GAS ANDA
+      const GAS_WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbwtDlbe9sIggt53dB1svT12uTv8R1ggrI4kSFRqkx-CLlD0tC2TgBmuYMybfWgqtQF7/exec"; // GANTI INI
+
+      let EMP = [];
+      let categories = [];
+      let promotions = [];
+      let selectedImageData = "";
+
+      async function init() {
+        try {
+          // Get data from Google Apps Script
+          const dataResponse = await fetch(GAS_WEB_APP_URL);
+          if (!dataResponse.ok) {
+            throw new Error(`HTTP error! status: ${dataResponse.status}`);
+          }
+          const data = await dataResponse.json();
+
+          EMP = data.empList || [];
+          categories = data.categories || [];
+          promotions = data.promotions || [];
+
+          populateSelect("category", categories);
+          populateSelect("promotionTitle", promotions);
+          setupAutocomplete();
+
+          // Set dashboard URL
+          document.getElementById("openDashboard").href =
+            GAS_WEB_APP_URL + "?page=dashboard";
+        } catch (error) {
+          console.error("Error loading data:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Connection Error",
+            text: "Cannot connect to server. Please check the GAS_WEB_APP_URL configuration.",
+          });
+
+          // Fallback data untuk testing
+          EMP = [
+            { name: "Test User 1", id: "SAL001" },
+            { name: "Test User 2", id: "SAL002" },
+          ];
+          categories = ["Electronics", "Fashion", "Food"];
+          promotions = ["Summer Sale", "Winter Promotion", "Clearance"];
+
+          populateSelect("category", categories);
+          populateSelect("promotionTitle", promotions);
+          setupAutocomplete();
+        }
+
+        document
+          .getElementById("imageInput")
+          .addEventListener("change", handleImageSelect);
+        document
+          .getElementById("submissionForm")
+          .addEventListener("submit", onSubmitClick);
+      }
+
+      function populateSelect(id, arr) {
+        const sel = document.getElementById(id);
+        // Clear existing options except first one
+        while (sel.options.length > 1) {
+          sel.remove(1);
+        }
+
+        arr.forEach((v) => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
+        });
+      }
+
+      function handleImageSelect(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById("imagePreview");
+        const container = document.getElementById("previewContainer");
+
+        // Reset jika tidak ada file
+        if (!file) {
+          removeImage();
+          return;
+        }
+
+        // Validasi file gambar
+        if (!file.type.startsWith("image/")) {
+          Swal.fire({
+            icon: "error",
+            title: "File Tidak Valid",
+            text: "File yang dipilih bukan gambar.",
+            confirmButtonText: "OK",
+          });
+          removeImage();
+          return;
+        }
+
+        // Validasi ukuran file (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire({
+            icon: "error",
+            title: "File Terlalu Besar",
+            text: "Ukuran file maksimal 5MB.",
+            confirmButtonText: "OK",
+          });
+          removeImage();
+          return;
+        }
+
+        // Gunakan FileReader untuk preview dan simpan data
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          // Tampilkan preview
+          preview.src = evt.target.result;
+          container.style.display = "block";
+
+          // SIMPAN DATA GAMBAR untuk submit
+          selectedImageData = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removeImage() {
+        // Reset input file
+        document.getElementById("imageInput").value = "";
+
+        // Sembunyikan preview
+        const preview = document.getElementById("imagePreview");
+        const container = document.getElementById("previewContainer");
+        preview.src = "";
+        container.style.display = "none";
+
+        // Hapus data gambar yang tersimpan
+        selectedImageData = "";
+      }
+
+      function setupAutocomplete() {
+        const input = document.getElementById("salesName");
+        const acContainer = document.getElementById("autocomplete-results");
+
+        const list = document.createElement("div");
+        list.className = "autocomplete-list";
+        list.style.display = "none";
+        acContainer.appendChild(list);
+
+        input.addEventListener("input", function () {
+          const q = this.value.trim().toLowerCase();
+          if (!q) {
+            list.style.display = "none";
+            return;
+          }
+
+          const matches = EMP.filter((e) =>
+            (e.name || "").toLowerCase().includes(q)
+          ).slice(0, 20);
+          if (matches.length === 0) {
+            list.style.display = "none";
+            return;
+          }
+
+          list.innerHTML = "";
+          matches.forEach((m) => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "list-group-item list-group-item-action";
+            item.textContent = m.name + (m.id ? " — " + m.id : "");
+
+            item.addEventListener("click", function () {
+              input.value = m.name;
+              document.getElementById("salperId").value = m.id;
+              list.style.display = "none";
+            });
+            list.appendChild(item);
+          });
+          list.style.display = "block";
+        });
+
+        input.addEventListener("blur", function () {
+          setTimeout(() => {
+            list.style.display = "none";
+          }, 200);
+        });
+      }
+
+      function validateForm(obj) {
+        if (!obj.salesName) return "Nama Sales wajib diisi.";
+        if (!obj.salperId) return "ID Salper wajib diisi (pilih dari saran).";
+        if (!obj.category) return "Kategori wajib dipilih.";
+        if (!obj.promotionTitle) return "Judul Promosi wajib dipilih.";
+        if (!obj.imageData) return "Bukti Screenshot wajib di upload.";
+        return "";
+      }
+
+      async function submitToServer(formObj) {
+        try {
+          const response = await fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify(formObj),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          return await response.json();
+        } catch (error) {
+          throw new Error("Submit failed: " + error.message);
+        }
+      }
+
+      async function onSubmitClick(e) {
+        e.preventDefault();
+
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        const formObj = {
+          salesName: document.getElementById("salesName").value.trim(),
+          salperId: document.getElementById("salperId").value.trim(),
+          category: document.getElementById("category").value,
+          promotionTitle: document.getElementById("promotionTitle").value,
+          comment: document.getElementById("comment").value.trim(),
+          imageData: selectedImageData,
+        };
+
+        const err = validateForm(formObj);
+        if (err) {
+          btn.disabled = false;
+          btn.textContent = "Submit";
+          Swal.fire({
+            icon: "error",
+            title: "Data Kurang Lengkap!",
+            text: err,
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        try {
+          const res = await submitToServer(formObj);
+
+          btn.disabled = false;
+          btn.textContent = "Submit";
+
+          if (res && res.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Berhasil!",
+              text: "Terima kasih telah Upload Status",
+              timer: 5000,
+              timerProgressBar: true,
+            }).then(() => {
+              document.getElementById("submissionForm").reset();
+              document.getElementById("salperId").value = "";
+              removeImage();
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Gagal Submit!",
+              text:
+                "Error: " + (res && res.message ? res.message : "Server error"),
+              timer: 5000,
+              timerProgressBar: true,
+            });
+          }
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = "Submit";
+          Swal.fire({
+            icon: "error",
+            title: "Terjadi Kesalahan!",
+            text: "Submit gagal: " + err.message,
+            timer: 5000,
+            timerProgressBar: true,
+          });
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+
+    <script>
+      // Blok gesture zoom (pinch)
+      document.addEventListener("gesturestart", function (e) {
+        e.preventDefault();
+      });
+
+      // Blok double-tap zoom
+      let lastTouchEnd = 0;
+      document.addEventListener(
+        "touchend",
+        function (e) {
+          const now = new Date().getTime();
+          if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+          }
+          lastTouchEnd = now;
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
