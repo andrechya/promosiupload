@@ -359,7 +359,7 @@
     <script>
       // CONFIG - GANTI DENGAN URL GAS ANDA
       const GAS_WEB_APP_URL =
-        "https://script.google.com/macros/s/AKfycbxmfbARLRzx1-WQvhEkBbBLCpsGgRjW18-TAz6tpNe1B44zzzo3yE4Y9T3bshO57c8_/exec"; // GANTI INI
+        "https://script.google.com/macros/s/AKfycbyd88c6AXpJvFcHCsai7y464qFCNsdbjZs-BCv0feHyrzDhRcOQVoOiryGUS_ZhSExo/exec"; // GANTI INI
 
       let EMP = [];
       let categories = [];
@@ -557,13 +557,12 @@
             headers: {
               "Content-Type": "application/json",
             },
+            mode: "no-cors", // ⬅️ tambahkan ini
           });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          return await response.json();
+      
+          // Karena no-cors, browser tidak bisa membaca responsenya
+          // Jadi kita anggap sukses jika tidak error
+          return { success: true };
         } catch (error) {
           throw new Error("Submit failed: " + error.message);
         }
