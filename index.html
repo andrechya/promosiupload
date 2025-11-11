@@ -136,27 +136,42 @@
       }
 
 .swal2-popup {
-  width: 90% !important;            /* Default responsif di layar kecil */
-  max-width: 320px !important;      /* Batas maksimum agar tidak terlalu besar */
-  padding: 1rem 1.25rem !important;
-  font-size: 1rem !important;
+  width: 260px !important;           /* Lebar popup */
+  max-width: 90vw !important;
+  padding: 0.75rem 1rem !important;  /* Padding lebih kecil */
+  font-size: 0.95rem !important;     /* Ukuran font lebih kecil */
   box-sizing: border-box;
 }
 
-@media (min-width: 400px) {
-  .swal2-popup {
-    width: 60% !important;
-    max-width: 340px !important;
-  }
+.swal2-title {
+  font-size: 1.1rem !important;      /* Judul lebih kecil */
+  margin-bottom: 0.5em !important;
 }
 
-@media (min-width: 600px) {
-  .swal2-popup {
-    width: 40% !important;
-    max-width: 360px !important;
-  }
+.swal2-html-container,
+.swal2-content {
+  font-size: 0.92rem !important;     /* Konten lebih kecil */
+  margin-bottom: 0.5em !important;
 }
 
+.swal2-icon {
+  width: 45px !important;            /* Icon centang lebih kecil */
+  height: 45px !important;
+  margin: 0.3em auto 0.3em !important;
+}
+
+.swal2-icon .swal2-success-ring {
+  width: 45px !important;            /* Lingkaran centang lebih kecil */
+  height: 45px !important;
+}
+
+.swal2-success [class^='swal2-success-line'] {
+  height: 2px !important;            /* Garis centang lebih tipis */
+}
+
+.swal2-actions {
+  margin-top: 0.5em !important;      /* Jarak tombol */
+}
       /* SweetAlert2 customizations */
       .swal2-confirm.swal2-styled {
         background-color: #173145 !important;
