@@ -135,6 +135,28 @@
         z-index: 2;
       }
 
+.swal2-popup {
+  width: 90% !important;            /* Default responsif di layar kecil */
+  max-width: 320px !important;      /* Batas maksimum agar tidak terlalu besar */
+  padding: 1rem 1.25rem !important;
+  font-size: 1rem !important;
+  box-sizing: border-box;
+}
+
+@media (min-width: 400px) {
+  .swal2-popup {
+    width: 60% !important;
+    max-width: 340px !important;
+  }
+}
+
+@media (min-width: 600px) {
+  .swal2-popup {
+    width: 40% !important;
+    max-width: 360px !important;
+  }
+}
+
       /* SweetAlert2 customizations */
       .swal2-confirm.swal2-styled {
         background-color: #173145 !important;
