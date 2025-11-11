@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "Aptos Narrow";
+  src: url("./asset/font/Aptos-Narrow.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Aptos Narrow";
+  src: url("./asset/font/Aptos-Narrow-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  background-color: #102c57;
+  font-family: "Aptos Narrow", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Warna default icon Home */
+.gohome-icon {
+  color: #102c57; /* Warna default icon */
+  transition: color 0.2s ease-in-out; /* Transisi halus saat berubah warna */
+}
+
+/* Warna tombol Home saat hover (agar latar belakang tetap #102c57) */
+#gohome.btn-outline-primary:hover {
+  background-color: #102c57; /* Jaga latar belakang saat hover */
+  border-color: #102c57; /* Jaga border saat hover */
+  color: white; /* Mengubah teks tombol menjadi putih saat hover */
+}
+
+/* Warna icon Home saat tombol #gohome di-hover */
+#gohome.btn-outline-primary:hover .gohome-icon {
+  color: white; /* Mengubah warna icon menjadi putih saat hover */
+}
+
+#openDashboard.btn-outline-primary:hover {
+  background-color: #102c57; /* Jaga latar belakang saat hover */
+  border-color: #102c57; /* Jaga border saat hover */
+  color: white; /* Mengubah teks tombol menjadi putih saat hover */
+}
+
+#openDashboard.btn-outline-primary:hover .gohome-icon {
+  color: white; /* Mengubah warna icon menjadi putih saat hover */
+}

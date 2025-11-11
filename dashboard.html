@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Dashboard - Submission Progress</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="asset/css/style.css" />
+
+    <style>
+      /* ========== FONT-FACE DEFINITION (Diasumsikan Aptos Narrow) ========== */
+      @font-face {
+        font-family: "Aptos Narrow";
+        src: url("./asset/font/Aptos-Narrow.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "Aptos Narrow";
+        src: url("./asset/font/Aptos-Narrow-Bold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
+      /* =================================================================== */
+
+      body {
+        background-color: #102c57;
+        font-family: "Aptos Narrow", sans-serif; /* Menggunakan Font Kustom */
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Container untuk desktop */
+      .container {
+        max-width: 978px !important;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Header image responsif */
+      .header-img {
+        border-radius: 0.375rem;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Card styling */
+      .card-custom {
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+      }
+
+      .btn-primary {
+        background: #102c57 !important;
+      }
+
+      /* Style untuk Stat Box */
+      #totalEmployees {
+        background-color: #ffe082; /* Warna disamakan dengan yellow */
+        border-radius: 0.375rem;
+      }
+
+      #totalSubmitted {
+        background-color: #a5d6a7; /* Warna disamakan dengan green */
+        border-radius: 0.375rem;
+      }
+
+      #totalPending {
+        background-color: #ef9a9a; /* Warna disamakan dengan red */
+        border-radius: 0.375rem;
+      }
+
+      /* Style Tombol Refresh */
+      #refreshBtn {
+        background: #102c57 !important;
+        color: white !important;
+        border: 1px solid #102c57 !important;
+      }
+
+      .meta {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      /* --- CUSTOM DASHBOARD STYLES (Diadaptasi agar konsisten) --- */
+
+      .statbox {
+        flex: 1;
+        min-width: 140px;
+        padding: 10px;
+        border-radius: 0.375rem;
+        text-align: center;
+      }
+
+      /* Style Tombol Home/Refresh Icons */
+      .gohome-icon,
+      .bi-arrow-clockwise {
+        color: #102c57;
+        transition: color 0.2s ease-in-out;
+      }
+
+      /* Warna tombol saat hover */
+      .btn-outline-primary:hover {
+        background-color: #102c57 !important;
+        border-color: #102c57 !important;
+        color: white !important;
+      }
+
+      /* Warna icon saat tombol di hover */
+      .btn-outline-primary:hover .gohome-icon,
+      .btn-outline-primary:hover .bi-arrow-clockwise {
+        color: white !important;
+      }
+
+      .category-section {
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eee;
+      }
+
+      .category-title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #102c57;
+        margin-bottom: 0.1rem; /* Kurangi margin untuk tata letak bersebelahan */
+      }
+
+      .progress-bar-custom {
+        width: 100%;
+        height: 14px;
+        background: #eef2ff;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 6px 0 10px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #102c57, #4f7bff);
+        width: 0%;
+        transition: width 0.6s ease;
+      }
+
+      .progress-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-align: right;
+        margin-bottom: 4px;
+      }
+
+      .pending-item {
+        padding: 6px 8px;
+        border-bottom: 1px dashed #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .control-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      /* Mobile-specific styles (max-width: 576px) */
+      @media (max-width: 576px) {
+        .header-img {
+          border-radius: 1rem;
+          padding: 0.5rem !important;
+        }
+
+        .card-custom {
+          border-radius: 0.5rem !important;
+          padding: 0.5rem !important;
+          margin-top: -15px !important;
+          margin-left: 0.5rem !important;
+          margin-right: 0.5rem !important;
+          min-height: auto !important;
+          box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06) !important;
+          border: 1px solid #ced4da;
+        }
+
+        .control-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-3">
+      <img
+        class="header-img mb-3"
+        src="https://lh3.googleusercontent.com/d/1iYD1JrKvnUVQ70QSQWiYaEk_EPY3uJoP"
+        alt="Header Image"
+      />
+
+      <div class="card card-custom p-3">
+        <h1 class="card-title h5">Submission Progress per Category</h1>
+        <p class="card-text text-muted mb-3">
+          Progress submission per promosi yang dipilih.
+        </p>
+
+        <div class="control-row mb-3">
+          <div class="flex-grow-1">
+            <label
+              for="promotionSelector"
+              class="form-label mb-1"
+              style="font-size: 0.9rem"
+              >Select Promotion</label
+            >
+            <select
+              id="promotionSelector"
+              class="form-select form-select-custom"
+              disabled
+            >
+              <option value="">-- Loading Promotions --</option>
+            </select>
+          </div>
+
+          <div style="width: 160px">
+            <label class="form-label mb-1" style="font-size: 0.9rem; opacity: 0"
+              >Aksi</label
+            >
+
+            <div class="d-flex gap-2">
+              <button
+                id="refreshBtn"
+                class="btn btn-sm btn-outline-primary flex-fill"
+                type="button"
+              >
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button
+                id="gohome"
+                class="btn btn-sm btn-outline-primary flex-fill"
+                type="button"
+                onclick="window.location.href='index.html'"
+              >
+                <i class="bi bi-house gohome-icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-3 mb-3">
+          <div class="stats d-flex flex-wrap gap-2">
+            <div class="statbox">
+              <div class="h5 mb-0" id="totalEmployees">0</div>
+              <div class="small text-muted">Total Employees</div>
+            </div>
+            <div class="statbox">
+              <div class="h5 mb-0" id="totalSubmitted">0</div>
+              <div class="small text-success">Submitted</div>
+            </div>
+            <div class="statbox">
+              <div class="h5 mb-0" id="totalPending">0</div>
+              <div class="small text-danger">Pending</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="progressArea">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Progress Detail</h5>
+
+            <button
+              id="viewUnregisteredBtn"
+              class="btn btn-sm btn-warning"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#unregisteredModal"
+              disabled
+            >
+              <i class="bi bi-eye"></i> View Unregistered
+            </button>
+          </div>
+
+          <div id="progressContent">
+            <p class="text-muted">Loading data...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="unregisteredModal"
+      tabindex="-1"
+      aria-labelledby="unregisteredModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="unregisteredModalLabel">
+              Unregistered Submitters
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="unregisteredModalBody">
+            <p class="text-muted">Loading data...</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // CONFIG: GANTI DENGAN URL GAS ANDA (SAMA DENGAN di index.html)
+      const GAS_WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbw5bDAEdgHWMtJnlShqCh6YB19HFn9caHXlkG2FR5RjFWm4BYCABQPOSWyjKQHrWtqE/exec"; // GANTI INI DENGAN URL DEPLOYMENT ANDA
+
+      let PROMOTIONS_LIST = [];
+      const refreshBtn = document.getElementById("refreshBtn");
+      const promoSelector = document.getElementById("promotionSelector");
+      const viewUnregisteredBtn = document.getElementById(
+        "viewUnregisteredBtn"
+      );
+      const unregisteredModalBody = document.getElementById(
+        "unregisteredModalBody"
+      );
+      const progressContent = document.getElementById("progressContent");
+
+      let UNREGISTERED_DATA = null;
+
+      // ----------------------------------------------------
+      // FUNGSI 1: Ambil Data Unregistered
+      // ----------------------------------------------------
+
+      async function fetchUnregisteredData() {
+        viewUnregisteredBtn.disabled = true;
+        viewUnregisteredBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm"></span> Loading...';
+
+        const url = `${GAS_WEB_APP_URL}?unregistered=true`;
+
+        try {
+          const response = await fetch(url);
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+
+          // ⭐️ PERBAIKAN 1: Cek apakah ada error dari sisi GAS
+          if (data.error) {
+            throw new Error(
+              `GAS Error: ${data.message || "Unknown server error."}`
+            );
+          }
+
+          // ⭐️ PERBAIKAN 2: Pastikan data.unregisteredData ada dan merupakan objek
+          if (
+            !data.unregisteredData ||
+            typeof data.unregisteredData !== "object"
+          ) {
+            UNREGISTERED_DATA = {}; // Set ke objek kosong jika data tidak valid
+          } else {
+            UNREGISTERED_DATA = data.unregisteredData;
+          }
+
+          // Perhitungan sekarang aman karena UNREGISTERED_DATA pasti objek
+          const totalUnregistered =
+            Object.values(UNREGISTERED_DATA).flat().length;
+
+          // Aktifkan tombol
+          viewUnregisteredBtn.disabled = false;
+
+          // Tentukan warna dan teks berdasarkan jumlah data
+          let buttonClass = "btn-warning";
+          let buttonText = "View Unregistered";
+
+          if (totalUnregistered > 0) {
+            buttonClass = "btn-danger";
+            buttonText = `<i class="bi bi-eye"></i> View Unregistered (${totalUnregistered})`;
+          } else {
+            buttonClass = "btn-success";
+            buttonText = `<i class="bi bi-eye"></i> View Unregistered (0)`;
+          }
+
+          viewUnregisteredBtn.className = `btn btn-sm ${buttonClass}`;
+          viewUnregisteredBtn.innerHTML = buttonText;
+        } catch (error) {
+          // Penanganan error klien yang lebih eksplisit
+          viewUnregisteredBtn.disabled = true;
+          viewUnregisteredBtn.className = `btn btn-sm btn-secondary`;
+          viewUnregisteredBtn.innerHTML =
+            '<i class="bi bi-x-octagon"></i> Failed';
+          unregisteredModalBody.innerHTML = `<p class="text-danger">FATAL ERROR: ${error.message}</p>`;
+
+          // ⭐️ Saran: Cek Log Eksekusi di GAS untuk error server yang sebenarnya.
+        }
+      }
+
+      // ----------------------------------------------------
+      // FUNGSI 2: Render Modal Unregistered
+      // ----------------------------------------------------
+
+      function renderUnregisteredModalContent(data) {
+        unregisteredModalBody.innerHTML = "";
+
+        const categories = Object.keys(data).sort();
+        if (categories.length === 0) {
+          unregisteredModalBody.innerHTML =
+            '<p class="text-success">Semua submitter terdaftar di Sheet EMP.</p>';
+          return;
+        }
+
+        categories.forEach((category) => {
+          const submitters = data[category];
+
+          const categoryHeader = document.createElement("h6");
+          categoryHeader.className = "mt-3 mb-2 text-primary";
+          categoryHeader.textContent =
+            category + ` (${submitters.length} submitters)`;
+          unregisteredModalBody.appendChild(categoryHeader);
+
+          const listGroup = document.createElement("ul");
+          listGroup.className =
+            "list-group list-group-flush border rounded mb-4";
+
+          submitters.forEach((s) => {
+            const listItem = document.createElement("li");
+            listItem.className =
+              "list-group-item d-flex justify-content-between align-items-center";
+            listItem.innerHTML = `
+                <div>
+                    <strong>${s.name}</strong> 
+                    <div class="text-muted small">${s.id}</div>
+                </div>
+                <span class="badge bg-secondary rounded-pill">${s.promotion}</span>
+            `;
+            listGroup.appendChild(listItem);
+          });
+          unregisteredModalBody.appendChild(listGroup);
+        });
+      }
+
+      // ----------------------------------------------------
+      // FUNGSI 3: Ambil Data Promosi dan Dashboard (fetchData)
+      // ----------------------------------------------------
+
+      async function loadPromotionList() {
+        const url = `${GAS_WEB_APP_URL}?promotions=true`;
+
+        // ... (Logic fetch promotions tetap sama) ...
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.message || "Error fetching promotion lists.");
+          }
+
+          PROMOTIONS_LIST = data.promotions || [];
+          populatePromotionSelect(PROMOTIONS_LIST, data.defaultPromotion);
+          return data.defaultPromotion;
+        } catch (error) {
+          console.error("Failed to load promotion list:", error);
+          alert("Failed to load promotion list: " + error.message);
+          promoSelector.innerHTML = '<option value="">Failed to Load</option>';
+          promoSelector.disabled = true;
+          return "";
+        }
+      }
+
+      function populatePromotionSelect(promos, defaultPromo) {
+        promoSelector.innerHTML = "";
+        if (promos.length === 0) {
+          promoSelector.innerHTML =
+            '<option value="">No Promotions Found</option>';
+          promoSelector.disabled = true;
+          return;
+        }
+        promos.forEach((v) => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = v;
+          if (v === defaultPromo) {
+            opt.selected = true;
+          }
+          promoSelector.appendChild(opt);
+        });
+        promoSelector.disabled = false;
+      }
+
+      async function fetchData(promotionTitle) {
+        if (!promotionTitle) {
+          return Promise.reject(new Error("Promotion Title is required."));
+        }
+
+        const url = `${GAS_WEB_APP_URL}?promotion=${encodeURIComponent(
+          promotionTitle
+        )}`;
+
+        // ... (Logic fetch data tetap sama) ...
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+
+          if (data.error) {
+            return Promise.reject(
+              new Error(data.message || "Error fetching dashboard data.")
+            );
+          }
+          return data;
+        } catch (error) {
+          return Promise.reject(
+            new Error("Data fetch failed: " + error.message)
+          );
+        }
+      }
+
+      // ----------------------------------------------------
+      // FUNGSI 4: Render Progress
+      // ----------------------------------------------------
+
+      function renderSummary(data) {
+        document.getElementById("totalEmployees").textContent =
+          data.totals.totalEmployees || 0;
+        document.getElementById("totalSubmitted").textContent =
+          data.totals.totalSubmitted || 0;
+        document.getElementById("totalPending").textContent =
+          data.totals.totalPending || 0;
+      }
+
+      function renderProgress(data) {
+        // Hapus konten lama di progressContent
+        progressContent.innerHTML = "";
+
+        if (!data.categories || data.categories.length === 0) {
+          progressContent.innerHTML = `<p class="text-muted">No categories or employees found for this promotion.</p>`;
+          return;
+        }
+
+        data.categories.forEach((cat) => {
+          const tot = data.totalsPerCategory[cat] || 0;
+          const sub = data.submittedPerCategory[cat] || 0;
+          const pendingList =
+            (data.pendingByCategory && data.pendingByCategory[cat]) || [];
+          const pct = tot === 0 ? 0 : Math.round((sub / tot) * 100);
+
+          const section = document.createElement("div");
+          section.className = "category-section";
+
+          // Tata letak bersebelahan untuk Category Title dan Progress Bar
+          section.innerHTML = `
+            <div class="row align-items-center">
+              <div class="col-sm-6 col-12">
+                <div class="category-title">${cat}</div>
+              </div>
+              <div class="col-sm-6 col-12">
+                <div class="progress-bar-custom">
+                  <div class="progress-fill" style="width:${pct}%"></div>
+                </div>
+                <div class="progress-label">${pct}% completed (${sub}/${tot})</div>
+              </div>
+            </div>
+            <div class="pending-list-container"></div>
+          `;
+
+          const pendingContainer = section.querySelector(
+            ".pending-list-container"
+          );
+
+          if (pendingList.length > 0) {
+            pendingList.forEach((p) => {
+              const item = document.createElement("div");
+              item.className = "pending-item";
+              item.innerHTML = `<div>${p.name}</div><div class="small text-muted">${p.id}</div>`;
+              pendingContainer.appendChild(item);
+            });
+          } else {
+            pendingContainer.innerHTML = `<div class="pending-empty">All employees in this category have submitted.</div>`;
+          }
+
+          progressContent.appendChild(section);
+        });
+      }
+
+      // ----------------------------------------------------
+      // FUNGSI 5: Load dan Render Utama
+      // ----------------------------------------------------
+
+      async function loadAndRender() {
+        const selectedPromo = promoSelector.value;
+        if (!selectedPromo) {
+          progressContent.innerHTML =
+            '<p class="text-muted">Please select a promotion title to view the progress.</p>';
+          renderSummary({
+            totals: { totalEmployees: 0, totalSubmitted: 0, totalPending: 0 },
+          });
+          return;
+        }
+
+        try {
+          refreshBtn.disabled = true;
+          refreshBtn.textContent = "Loading...";
+
+          // 1. Fetch data progress utama
+          const data = await fetchData(selectedPromo);
+
+          // 2. Fetch data unregistered (Perbarui data UNREGISTERED_DATA)
+          // Kita tidak perlu await di sini jika hanya ingin mengupdate tombol saja
+          fetchUnregisteredData();
+
+          // 3. Render hasil progress
+          renderSummary(data);
+          renderProgress(data);
+
+          refreshBtn.textContent = "Refresh";
+          refreshBtn.disabled = false;
+        } catch (err) {
+          refreshBtn.textContent = "Refresh";
+          refreshBtn.disabled = false;
+          alert("Failed to load dashboard: " + (err.message || String(err)));
+        }
+      }
+
+      // ----------------------------------------------------
+      // FUNGSI 6: Inisialisasi
+      // ----------------------------------------------------
+
+      async function initDashboard() {
+        try {
+          refreshBtn.disabled = true;
+          refreshBtn.textContent = "Loading...";
+
+          const defaultPromo = await loadPromotionList();
+
+          if (defaultPromo) {
+            await loadAndRender();
+          }
+
+          viewUnregisteredBtn.addEventListener("click", () => {
+            if (!UNREGISTERED_DATA) {
+              fetchUnregisteredData();
+            } else {
+              renderUnregisteredModalContent(UNREGISTERED_DATA);
+            }
+          });
+
+          promoSelector.addEventListener("change", loadAndRender);
+          refreshBtn.addEventListener("click", loadAndRender);
+
+          setInterval(loadAndRender, 30000);
+        } catch (err) {
+          refreshBtn.textContent = "Error";
+          if (!PROMOTIONS_LIST || PROMOTIONS_LIST.length === 0) {
+            promoSelector.disabled = true;
+            refreshBtn.disabled = true;
+          } else {
+            refreshBtn.disabled = false;
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", initDashboard);
+    </script>
+  </body>
+</html>

@@ -1,866 +1,955 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <base target="_top" />
     <meta charset="utf-8" />
     <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <title>Promotion Form</title>
 
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
     />
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
     />
 
+    <link rel="stylesheet" href="asset/css/style.css" />
+
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body {
-            background-color: #102c57;
-            font-family: "Inter", sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+      /* Container untuk desktop */
+      .container {
+        max-width: 978px !important;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
-        /* Container untuk desktop */
+      /* Header image responsif */
+      .header-img {
+        border-radius: 0.375rem;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Card styling */
+      .card-custom {
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+      }
+
+      .btn-primary {
+        background: #102c57 !important;
+      }
+
+      .card-title {
+        font-weight: bold;
+      }
+
+      .meta {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      /* Autocomplete dropdown styling */
+      #autocomplete-results {
+        position: relative;
+      }
+
+      .autocomplete-list {
+        padding: 10px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+
+      /* Menambahkan efek hover untuk item autocomplete */
+      .list-group-item-action:hover {
+        background-color: #173145 !important;
+        color: white !important;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      /* Preview Container */
+      #previewContainer {
+        position: relative;
+        z-index: 1;
+        display: none;
+      }
+
+      /* Preview wrapper */
+      .preview-wrapper {
+        position: relative;
+        display: inline-block;
+        z-index: 2;
+      }
+
+      .btn-remove-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        z-index: 3;
+      }
+
+      .btn-remove-image:hover {
+        background: rgba(255, 0, 0, 0.9);
+      }
+
+      /* Gambar preview */
+      #imagePreview {
+        max-height: 200px;
+        width: auto;
+        object-fit: contain;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* SweetAlert2 Styling */
+      .swal2-popup {
+        width: 350px !important;
+        max-width: 90vw !important;
+        padding: 0.5rem !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box;
+      }
+
+      .swal2-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 0px !important;
+      }
+
+      .swal2-html-container,
+      .swal2-content {
+        font-size: 0.92rem !important;
+        margin-bottom: 0em !important;
+      }
+
+      .swal2-icon {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 10px !important;
+        margin: 0.15em auto 0.3em !important;
+      }
+
+      .swal2-actions {
+        margin-top: 0.5em !important;
+      }
+
+      /* SweetAlert2 button customization (rata tengah vertikal) */
+      .swal2-confirm.swal2-styled {
+        height: 1.5rem;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        background-color: #173145 !important;
+        border: none !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(1, 77, 109, 0.4);
+      }
+
+      .swal2-confirm.swal2-styled:hover {
+        background-color: #102c57 !important;
+      }
+
+      /* CSS untuk Loading Screen (Progress Bar) */
+      #page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #102c57;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+        opacity: 1;
+      }
+
+      .loader-hidden {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+
+      /* Mobile-specific styles (max-width: 768px) */
+      @media (max-width: 768px) {
         .container {
-            max-width: 978px !important;
-            margin-left: auto;
-            margin-right: auto;
+          max-width: 100% !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
         }
 
-        /* Header image responsif */
-        .header-img {
-            border-radius: 0.375rem;
-            width: 100%;
-            height: auto;
-            display: block;
+        .card-title {
+          font-weight: bold;
         }
 
-        /* Card styling */
         .card-custom {
-            box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+          border-radius: 0;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          box-shadow: none;
+          border: none;
+          min-height: 100vh;
         }
 
-        .btn-primary {
-            background: #102c57 !important;
+        .header-img {
+          border-radius: 0;
+          margin-top: 0;
+          width: 100%;
         }
 
-        .meta {
-            font-size: 12px;
-            color: #6c757d;
-            text-align: center;
-            margin-top: 8px;
+        .card-custom .card-body,
+        .card-custom .p-3 {
+          padding: 1rem !important;
         }
 
-        /* Autocomplete dropdown styling */
-        #autocomplete-results {
-            position: relative;
+        .btn,
+        .form-control,
+        .form-select {
+          font-size: 16px;
         }
 
-        .autocomplete-list {
-            padding: 10px;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            max-height: 200px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        .btn-lg {
+          padding: 0.75rem 1rem;
+        }
+      }
+
+      /* Mobile-specific styles (max-width: 576px) */
+      @media (max-width: 576px) {
+        .header-img {
+          border-radius: 1rem;
+          width: 100%;
+          height: auto;
+          display: block;
+          padding: 0.5rem !important;
         }
 
-        /* Menambahkan efek hover untuk item autocomplete */
-        .list-group-item-action:hover {
-            background-color: #173145 !important;
-            color: white !important;
-            cursor: pointer;
-            border-radius: 5px;
+        .card-custom {
+          border-radius: 0.5rem !important;
+          padding: 0.5rem !important;
+          margin-top: -15px !important;
+          margin-left: 0.5rem !important;
+          margin-right: 0.5rem !important;
+          min-height: auto !important;
+          box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06) !important;
+          border: 1px solid #ced4da;
         }
 
-        /* Preview Container */
-        #previewContainer {
-            position: relative;
-            z-index: 1;
-            display: none;
+        .card-custom .card-body,
+        .card-custom .p-3 {
+          padding: 0.5rem !important;
         }
 
-        /* Preview wrapper */
-        .preview-wrapper {
-            position: relative;
-            display: inline-block;
-            z-index: 2;
+        .card-title {
+          font-weight: bold;
         }
 
-        .btn-remove-image {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(255, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 3;
+        h1.card-title {
+          font-size: 1.25rem;
         }
 
-        .btn-remove-image:hover {
-            background: rgba(255, 0, 0, 0.9);
+        body {
+          padding: 10 !important;
+          margin: 0 !important;
         }
-
-        /* Gambar preview */
-        #imagePreview {
-            max-height: 200px;
-            width: auto;
-            object-fit: contain;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* SweetAlert2 Styling */
-        .swal2-popup {
-            width: 350px !important;
-            max-width: 90vw !important;
-            padding: 0.5rem !important;
-            font-size: 0.95rem !important;
-            box-sizing: border-box;
-        }
-
-        .swal2-title {
-            font-size: 1.1rem !important;
-            margin-bottom: 0px !important;
-        }
-
-        .swal2-html-container,
-        .swal2-content {
-            font-size: 0.92rem !important;
-            margin-bottom: 0em !important;
-        }
-
-        .swal2-icon {
-            width: 50px !important;
-            height: 50px !important;
-            font-size: 10px !important;
-            margin: 0.15em auto 0.3em !important;
-        }
-
-        .swal2-actions {
-            margin-top: 0.5em !important;
-        }
-
-        /* SweetAlert2 button customization (rata tengah vertikal) */
-        .swal2-confirm.swal2-styled {
-            height: 1.5rem;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-
-            background-color: #173145 !important;
-            border: none !important;
-            color: #fff !important;
-            box-shadow: 0 0 0 3px rgba(1, 77, 109, 0.4);
-        }
-
-        .swal2-confirm.swal2-styled:hover {
-            background-color: #102c57 !important;
-        }
-
-        /* CSS untuk Loading Screen (Progress Bar) */
-        #page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #102c57; 
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-            opacity: 1;
-        }
-
-        .loader-hidden {
-            opacity: 0 !important;
-            visibility: hidden !important;
-        }
-
-        /* Mobile-specific styles (max-width: 768px) */
-        @media (max-width: 768px) {
-            .container {
-                max-width: 100% !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-            }
-
-            .card-custom {
-                border-radius: 0;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-                box-shadow: none;
-                border: none;
-                min-height: 100vh;
-            }
-
-            .header-img {
-                border-radius: 0;
-                margin-top: 0;
-                width: 100%;
-            }
-
-            .card-custom .card-body,
-            .card-custom .p-3 {
-                padding: 1rem !important;
-            }
-
-            .btn,
-            .form-control,
-            .form-select {
-                font-size: 16px;
-            }
-
-            .btn-lg {
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        /* Mobile-specific styles (max-width: 576px) */
-        @media (max-width: 576px) {
-            .header-img {
-                border-radius: 1rem;
-                width: 100%;
-                height: auto;
-                display: block;
-                padding: 0.5rem !important;
-            }
-
-            .card-custom {
-                border-radius: 0.5rem !important;
-                padding: 0.5rem !important;
-                margin-top: -15px !important;
-                margin-left: 0.5rem !important;
-                margin-right: 0.5rem !important;
-                min-height: auto !important;
-                box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06) !important;
-                border: 1px solid #ced4da;
-            }
-
-            .card-custom .card-body,
-            .card-custom .p-3 {
-                padding: 0.5rem !important;
-            }
-
-            h1.card-title {
-                font-size: 1.25rem;
-            }
-
-            body {
-                padding: 10 !important;
-                margin: 0 !important;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <div id="page-loader" class="d-flex flex-column justify-content-center align-items-center">
-        <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem; margin-bottom: 20px;">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        
-        <div id="loading-message" class="text-white mb-2" style="font-size: 0.9rem;">Checking cache...</div>
-        
-        <div id="loading-percentage" class="text-white mb-1" style="font-size: 0.8rem; font-weight: bold;">10%</div>
-        
-        <div class="progress" style="width: 250px; height: 10px;">
-            <div 
-                id="loading-progress-bar"
-                class="progress-bar progress-bar-striped progress-bar-animated bg-light" 
-                role="progressbar" 
-                style="width: 10%" 
-                aria-valuenow="10" 
-                aria-valuemin="0" 
-                aria-valuemax="100"
-            ></div>
-        </div>
-        
+  </head>
+  <body>
+    <div
+      id="page-loader"
+      class="d-flex flex-column justify-content-center align-items-center"
+    >
+      <div
+        class="spinner-border text-light"
+        role="status"
+        style="width: 3rem; height: 3rem; margin-bottom: 20px"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div
+        id="loading-message"
+        class="text-white mb-2"
+        style="font-size: 0.9rem"
+      >
+        Checking cache...
+      </div>
+
+      <div
+        id="loading-percentage"
+        class="text-white mb-1"
+        style="font-size: 0.8rem; font-weight: bold"
+      >
+        10%
+      </div>
+
+      <div class="progress" style="width: 250px; height: 10px">
+        <div
+          id="loading-progress-bar"
+          class="progress-bar progress-bar-striped progress-bar-animated bg-light"
+          role="progressbar"
+          style="width: 10%"
+          aria-valuenow="10"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
     </div>
     <div class="container py-3">
-        <img
-            class="header-img mb-3"
-            src="https://lh3.googleusercontent.com/d/1iYD1JrKvnUVQ70QSQWiYaEk_EPY3uJoP"
-            alt="Header Image"
-        />
+      <img
+        class="header-img mb-3"
+        src="https://lh3.googleusercontent.com/d/1iYD1JrKvnUVQ70QSQWiYaEk_EPY3uJoP"
+        alt="Header Image"
+      />
 
-        <div class="card card-custom p-3">
-            <h1 class="card-title h5">Promotion Submission</h1>
-            <p class="card-text text-muted mb-3">
-                Isi form ini lewat HP. Tekan Dashboard untuk lihat progress
-                submission.
-            </p>
+      <div class="card card-custom p-3">
+        <h1 class="card-title h5">Promotion Submission</h1>
+        <p class="card-text text-muted mb-3">
+          Isi form ini lewat HP. Tekan Dashboard untuk lihat progress
+          submission.
+        </p>
 
-            <form id="submissionForm">
-                <div class="mb-3">
-                    <label for="salesName" class="form-label">Sales Name</label>
-                    <input
-                        id="salesName"
-                        type="text"
-                        class="form-control"
-                        placeholder="Start typing sales name..."
-                        autocomplete="off"
-                        required
-                    />
-                    <div id="autocomplete-results"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="salperId" class="form-label">Salper ID</label>
-                    <input
-                        id="salperId"
-                        type="text"
-                        class="form-control"
-                        readonly
-                        placeholder="Will be filled when you pick a name"
-                    />
-                </div>
-
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select id="category" class="form-select" required>
-                        <option value="">-- choose category --</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="promotionTitle" class="form-label"
-                        >Promotion Title</label
-                    >
-                    <select id="promotionTitle" class="form-select" required>
-                        <option value="">-- choose promotion --</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="comment" class="form-label">Comment (optional)</label>
-                    <textarea
-                        id="comment"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Add a note..."
-                    ></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="imageInput" class="form-label"
-                        >Upload Image (Mandatory)</label
-                    >
-                    <input
-                        id="imageInput"
-                        type="file"
-                        class="form-control"
-                        accept="image/*"
-                    />
-                </div>
-
-                <div class="mb-3 text-center" id="previewContainer">
-                    <div class="preview-wrapper">
-                        <img
-                            id="imagePreview"
-                            alt="Image Preview"
-                            class="img-fluid rounded shadow-sm"
-                            style="max-height: 200px; width: auto; object-fit: contain"
-                        />
-                        <button
-                            type="button"
-                            class="btn-remove-image"
-                            onclick="removeImage()"
-                        >
-                            <i class="bi bi-x"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button
-                        id="submitBtn"
-                        class="btn btn-primary btn-lg w-100"
-                        type="submit"
-                    >
-                        Submit
-                    </button>
-                </div>
-            </form>
-
-            <div class="d-flex gap-2 mt-3">
-                <a
-                    id="openDashboard"
-                    class="btn btn-sm btn-outline-primary w-100"
-                    target="_blank"
-                    >Open Dashboard</a
-                >
+        <form id="submissionForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="salesName" class="form-label">Sales Name</label>
+              <input
+                id="salesName"
+                type="text"
+                class="form-control"
+                placeholder="Start typing sales name..."
+                autocomplete="off"
+                required
+              />
+              <div id="autocomplete-results"></div>
             </div>
 
-            <div class="meta" id="statusArea"></div>
-        </div>
+            <div class="col-md-6 mb-3">
+              <label for="salperId" class="form-label">Salper ID</label>
+              <input
+                id="salperId"
+                type="text"
+                class="form-control"
+                readonly
+                placeholder="Will be filled when you pick a name"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select id="category" class="form-select" required>
+                <option value="">-- choose category --</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="promotionTitle" class="form-label"
+                >Promotion Title</label
+              >
+              <select id="promotionTitle" class="form-select" required>
+                <option value="">-- choose promotion --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment (optional)</label>
+            <textarea
+              id="comment"
+              class="form-control"
+              rows="3"
+              placeholder="Add a note..."
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="imageInput" class="form-label"
+              >Upload Image (Mandatory)</label
+            >
+            <input
+              id="imageInput"
+              type="file"
+              class="form-control"
+              accept="image/*"
+            />
+          </div>
+
+          <div class="mb-3 text-center" id="previewContainer">
+            <div class="preview-wrapper">
+              <img
+                id="imagePreview"
+                alt="Image Preview"
+                class="img-fluid rounded shadow-sm"
+                style="max-height: 200px; width: auto; object-fit: contain"
+              />
+              <button
+                type="button"
+                class="btn-remove-image"
+                onclick="removeImage()"
+              >
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button
+              id="submitBtn"
+              class="btn btn-primary btn-lg flex-grow-1"
+              type="submit"
+              style="width: 70%"
+            >
+              Submit
+            </button>
+
+            <a
+              id="openDashboard"
+              class="btn btn-outline-primary w-25 d-flex align-items-center justify-content-center"
+              target="_blank"
+              style="min-width: 100px"
+            >
+              <i class="bi bi-house me-1 gohome-icon"></i>
+              Dashboard
+            </a>
+          </div>
+        </form>
+
+        <div class="meta" id="statusArea"></div>
+      </div>
     </div>
 
     <script>
-        // CONFIG - GANTI DENGAN URL GAS ANDA
-        const GAS_WEB_APP_URL =
-            "https://script.google.com/macros/s/AKfycbyd88c6AXpJvFcHCsai7y464qFCNsdbjZs-BCv0feHyrzDhRcOQVoOiryGUS_ZhSExo/exec"; // GANTI INI
+      // CONFIG - GANTI DENGAN URL GAS ANDA
+      const GAS_WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbw5bDAEdgHWMtJnlShqCh6YB19HFn9caHXlkG2FR5RjFWm4BYCABQPOSWyjKQHrWtqE/exec"; // GANTI INI
 
-        // KONSTANTA CACHING
-        const CACHE_KEY = 'promotionFormData';
-        const LAST_FETCH_TIME_KEY = 'lastFetchTime';
-        // Data dianggap kedaluwarsa setelah 1 jam (dalam milidetik)
-        const CACHE_EXPIRY_MS = 60 * 60 * 1000; // 1 jam
+      // KONSTANTA CACHING
+      const CACHE_KEY = "promotionFormData";
+      const LAST_FETCH_TIME_KEY = "lastFetchTime";
+      // Data dianggap kedaluwarsa setelah 1 jam (dalam milidetik)
+      const CACHE_EXPIRY_MS = 60 * 60 * 1000; // 1 jam
 
-        let EMP = [];
-        let categories = [];
-        let promotions = [];
-        let selectedImageData = "";
+      let EMP = [];
+      let categories = [];
+      let promotions = [];
+      let selectedImageData = "";
 
-        /**
-         * Fungsi untuk memperbarui tampilan loader (pesan, progress bar, dan persentase).
-         */
-        function updateLoader(message, progress) {
-            const msgElement = document.getElementById('loading-message');
-            const barElement = document.getElementById('loading-progress-bar');
-            const percentElement = document.getElementById('loading-percentage'); 
-            
-            if (msgElement) msgElement.textContent = message;
-            if (barElement) {
-                barElement.style.width = progress + '%';
-                barElement.setAttribute('aria-valuenow', progress);
-            }
-            
-            // Perbarui teks persentase
-            if (percentElement) {
-                percentElement.textContent = progress + '%';
-            }
+      /**
+       * Fungsi untuk memperbarui tampilan loader (pesan, progress bar, dan persentase).
+       */
+      function updateLoader(message, progress) {
+        const msgElement = document.getElementById("loading-message");
+        const barElement = document.getElementById("loading-progress-bar");
+        const percentElement = document.getElementById("loading-percentage");
+
+        if (msgElement) msgElement.textContent = message;
+        if (barElement) {
+          barElement.style.width = progress + "%";
+          barElement.setAttribute("aria-valuenow", progress);
         }
 
-        /**
-         * Menyembunyikan overlay loading setelah semua data siap.
-         */
-        function hideLoader() {
-            const loader = document.getElementById('page-loader');
-            if (loader) {
-                // Animasi progress bar ke 100% sebelum fade out
-                updateLoader("Done!", 100); 
-                
-                // Tambahkan kelas untuk fade-out dan menyembunyikan
-                loader.classList.add('loader-hidden');
+        // Perbarui teks persentase
+        if (percentElement) {
+          percentElement.textContent = progress + "%";
+        }
+      }
 
-                // Opsional: Hapus elemen dari DOM setelah animasi selesai (500ms)
-                setTimeout(() => {
-                    loader.remove();
-                }, 500); 
+      /**
+       * Menyembunyikan overlay loading setelah semua data siap.
+       */
+      function hideLoader() {
+        const loader = document.getElementById("page-loader");
+        if (loader) {
+          // Animasi progress bar ke 100% sebelum fade out
+          updateLoader("Done!", 100);
+
+          // Tambahkan kelas untuk fade-out dan menyembunyikan
+          loader.classList.add("loader-hidden");
+
+          // Opsional: Hapus elemen dari DOM setelah animasi selesai (500ms)
+          setTimeout(() => {
+            loader.remove();
+          }, 500);
+        }
+      }
+
+      /**
+       * Fungsi utama untuk inisialisasi, termasuk logika caching.
+       */
+      async function init() {
+        // AWAL: Tampilkan progress saat mengecek cache
+        updateLoader("Checking cache...", 10);
+
+        // 1. Cek Data di Local Storage
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        const lastFetch = localStorage.getItem(LAST_FETCH_TIME_KEY);
+        const currentTime = new Date().getTime();
+
+        let shouldFetch = true;
+
+        if (cachedData && lastFetch) {
+          const timeElapsed = currentTime - parseInt(lastFetch);
+
+          // Cek jika data belum kedaluwarsa
+          if (timeElapsed < CACHE_EXPIRY_MS) {
+            try {
+              const data = JSON.parse(cachedData);
+
+              // Gunakan Data Cache
+              EMP = data.empList || [];
+              categories = data.categories || [];
+              promotions = data.promotions || [];
+              shouldFetch = false;
+
+              updateLoader("Cache loaded successfully.", 90); // Update status
+            } catch (e) {
+              console.error("Error parsing cached data:", e);
             }
+          } else {
+            updateLoader("Cache expired. Preparing to fetch new data...", 30); // Update status
+            // Hapus cache lama (opsional)
+            localStorage.removeItem(CACHE_KEY);
+            localStorage.removeItem(LAST_FETCH_TIME_KEY);
+          }
+        } else {
+          updateLoader("No cache found. Starting data fetch...", 30); // Update status
         }
 
-        /**
-         * Fungsi utama untuk inisialisasi, termasuk logika caching.
-         */
-        async function init() {
-            // AWAL: Tampilkan progress saat mengecek cache
-            updateLoader("Checking cache...", 10); 
-            
-            // 1. Cek Data di Local Storage
-            const cachedData = localStorage.getItem(CACHE_KEY);
-            const lastFetch = localStorage.getItem(LAST_FETCH_TIME_KEY);
-            const currentTime = new Date().getTime();
-            
-            let shouldFetch = true;
+        // 2. Fetch ke Server HANYA jika diperlukan
+        if (shouldFetch) {
+          try {
+            // Update progress saat fetch dimulai
+            updateLoader("Fetching data from server...", 50);
 
-            if (cachedData && lastFetch) {
-                const timeElapsed = currentTime - parseInt(lastFetch);
-                
-                // Cek jika data belum kedaluwarsa
-                if (timeElapsed < CACHE_EXPIRY_MS) {
-                    try {
-                        const data = JSON.parse(cachedData);
-                        
-                        // Gunakan Data Cache
-                        EMP = data.empList || [];
-                        categories = data.categories || [];
-                        promotions = data.promotions || [];
-                        shouldFetch = false; 
-                        
-                        updateLoader("Cache loaded successfully.", 90); // Update status
-                    } catch (e) {
-                        console.error("Error parsing cached data:", e);
-                    }
-                } else {
-                    updateLoader("Cache expired. Preparing to fetch new data...", 30); // Update status
-                    // Hapus cache lama (opsional)
-                    localStorage.removeItem(CACHE_KEY);
-                    localStorage.removeItem(LAST_FETCH_TIME_KEY);
-                }
-            } else {
-                updateLoader("No cache found. Starting data fetch...", 30); // Update status
+            // Get data from Google Apps Script
+            const dataResponse = await fetch(GAS_WEB_APP_URL);
+            if (!dataResponse.ok) {
+              throw new Error(`HTTP error! status: ${dataResponse.status}`);
             }
+            const data = await dataResponse.json();
 
-            // 2. Fetch ke Server HANYA jika diperlukan
-            if (shouldFetch) {
-                try {
-                    // Update progress saat fetch dimulai
-                    updateLoader("Fetching data from server...", 50); 
-                    
-                    // Get data from Google Apps Script
-                    const dataResponse = await fetch(GAS_WEB_APP_URL);
-                    if (!dataResponse.ok) {
-                        throw new Error(`HTTP error! status: ${dataResponse.status}`);
-                    }
-                    const data = await dataResponse.json();
+            EMP = data.empList || [];
+            categories = data.categories || [];
+            promotions = data.promotions || [];
 
-                    EMP = data.empList || [];
-                    categories = data.categories || [];
-                    promotions = data.promotions || [];
-
-                    // 3. Simpan Data Baru ke Local Storage
-                    if (EMP.length > 0) { 
-                        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                        localStorage.setItem(LAST_FETCH_TIME_KEY, currentTime.toString());
-                        updateLoader("Data received and saved.", 80); // Update status
-                    }
-
-                } catch (error) {
-                    console.error("Error loading data:", error);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Connection Error",
-                        text: "Cannot connect to server. Please check the GAS_WEB_APP_URL configuration.",
-                    });
-
-                    // Fallback data
-                    EMP = [
-                        { name: "Test User 1", id: "SAL001" },
-                        { name: "Test User 2", id: "SAL002" },
-                    ];
-                    categories = ["Electronics", "Fashion", "Food"];
-                    promotions = ["Summer Sale", "Winter Promotion", "Clearance"];
-                    updateLoader("Using fallback data.", 80);
-                }
+            // 3. Simpan Data Baru ke Local Storage
+            if (EMP.length > 0) {
+              localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+              localStorage.setItem(LAST_FETCH_TIME_KEY, currentTime.toString());
+              updateLoader("Data received and saved.", 80); // Update status
             }
-            
-            // Update progress saat data diolah dan form diisi
-            updateLoader("Populating form...", 95); 
-
-            // 4. Lanjutkan inisialisasi dengan data yang sudah didapatkan
-            populateSelect("category", categories);
-            populateSelect("promotionTitle", promotions);
-            setupAutocomplete();
-
-            // Set dashboard URL
-            document.getElementById("openDashboard").href =
-                GAS_WEB_APP_URL + "?page=dashboard";
-
-            document
-                .getElementById("imageInput")
-                .addEventListener("change", handleImageSelect);
-            document
-                .getElementById("submissionForm")
-                .addEventListener("submit", onSubmitClick);
-                
-            // Panggil hideLoader setelah SEMUA inisialisasi selesai di init()
-            hideLoader(); 
-        }
-
-        /**
-         * Mengisi elemen <select> dengan array data.
-         * @param {string} id - ID elemen select.
-         * @param {Array<string>} arr - Array data untuk opsi.
-         */
-        function populateSelect(id, arr) {
-            const sel = document.getElementById(id);
-            // Clear existing options except first one
-            while (sel.options.length > 1) {
-                sel.remove(1);
-            }
-
-            arr.forEach((v) => {
-                const opt = document.createElement("option");
-                opt.value = v;
-                opt.textContent = v;
-                sel.appendChild(opt);
+          } catch (error) {
+            console.error("Error loading data:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Connection Error",
+              text: "Cannot connect to server. Please check the GAS_WEB_APP_URL configuration.",
             });
+
+            // Fallback data
+            EMP = [
+              { name: "Test User 1", id: "SAL001" },
+              { name: "Test User 2", id: "SAL002" },
+            ];
+            categories = ["Electronics", "Fashion", "Food"];
+            promotions = ["Summer Sale", "Winter Promotion", "Clearance"];
+            updateLoader("Using fallback data.", 80);
+          }
         }
 
-        /**
-         * Menangani pemilihan file gambar dan menampilkan preview.
-         * @param {Event} e - Event perubahan input file.
-         */
-        function handleImageSelect(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById("imagePreview");
-            const container = document.getElementById("previewContainer");
+        // Update progress saat data diolah dan form diisi
+        updateLoader("Populating form...", 95);
 
-            // Reset jika tidak ada file
-            if (!file) {
-                removeImage();
-                return;
-            }
+        // 4. Lanjutkan inisialisasi dengan data yang sudah didapatkan
+        populateSelect("category", categories);
+        populateSelect("promotionTitle", promotions);
+        setupAutocomplete();
 
-            // Validasi file gambar
-            if (!file.type.startsWith("image/")) {
-                Swal.fire({
-                    icon: "error",
-                    title: "File Tidak Valid",
-                    text: "File yang dipilih bukan gambar.",
-                    confirmButtonText: "OK",
-                });
-                removeImage();
-                return;
-            }
+        // Set dashboard URL
+        document.getElementById("openDashboard").href = "dashboard.html";
 
-            // Validasi ukuran file (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                Swal.fire({
-                    icon: "error",
-                    title: "File Terlalu Besar",
-                    text: "Ukuran file maksimal 5MB.",
-                    confirmButtonText: "OK",
-                });
-                removeImage();
-                return;
-            }
+        document
+          .getElementById("imageInput")
+          .addEventListener("change", handleImageSelect);
+        document
+          .getElementById("submissionForm")
+          .addEventListener("submit", onSubmitClick);
 
-            // Gunakan FileReader untuk preview dan simpan data
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-                // Tampilkan preview
-                preview.src = evt.target.result;
-                container.style.display = "block";
+        // Panggil hideLoader setelah SEMUA inisialisasi selesai di init()
+        hideLoader();
+      }
 
-                // SIMPAN DATA GAMBAR untuk submit
-                selectedImageData = evt.target.result;
-            };
-            reader.readAsDataURL(file);
+      /**
+       * Mengisi elemen <select> dengan array data.
+       * @param {string} id - ID elemen select.
+       * @param {Array<string>} arr - Array data untuk opsi.
+       */
+      function populateSelect(id, arr) {
+        const sel = document.getElementById(id);
+        // Clear existing options except first one
+        while (sel.options.length > 1) {
+          sel.remove(1);
         }
 
-        /**
-         * Menghapus gambar yang sudah di-upload dan menyembunyikan preview.
-         */
-        function removeImage() {
-            // Reset input file
-            document.getElementById("imageInput").value = "";
+        arr.forEach((v) => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
+        });
+      }
 
-            // Sembunyikan preview
-            const preview = document.getElementById("imagePreview");
-            const container = document.getElementById("previewContainer");
-            preview.src = "";
-            container.style.display = "none";
+      /**
+       * Menangani pemilihan file gambar dan menampilkan preview.
+       * @param {Event} e - Event perubahan input file.
+       */
+      function handleImageSelect(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById("imagePreview");
+        const container = document.getElementById("previewContainer");
 
-            // Hapus data gambar yang tersimpan
-            selectedImageData = "";
+        // Reset jika tidak ada file
+        if (!file) {
+          removeImage();
+          return;
         }
 
-        /**
-         * Mengatur fungsionalitas Autocomplete untuk kolom Sales Name.
-         */
-        function setupAutocomplete() {
-            const input = document.getElementById("salesName");
-            const acContainer = document.getElementById("autocomplete-results");
+        // Validasi file gambar
+        if (!file.type.startsWith("image/")) {
+          Swal.fire({
+            icon: "error",
+            title: "File Tidak Valid",
+            text: "File yang dipilih bukan gambar.",
+            confirmButtonText: "OK",
+          });
+          removeImage();
+          return;
+        }
 
-            const list = document.createElement("div");
-            list.className = "autocomplete-list";
+        // Validasi ukuran file (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire({
+            icon: "error",
+            title: "File Terlalu Besar",
+            text: "Ukuran file maksimal 5MB.",
+            confirmButtonText: "OK",
+          });
+          removeImage();
+          return;
+        }
+
+        // Gunakan FileReader untuk preview dan simpan data
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          // Tampilkan preview
+          preview.src = evt.target.result;
+          container.style.display = "block";
+
+          // SIMPAN DATA GAMBAR untuk submit
+          selectedImageData = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      /**
+       * Menghapus gambar yang sudah di-upload dan menyembunyikan preview.
+       */
+      function removeImage() {
+        // Reset input file
+        document.getElementById("imageInput").value = "";
+
+        // Sembunyikan preview
+        const preview = document.getElementById("imagePreview");
+        const container = document.getElementById("previewContainer");
+        preview.src = "";
+        container.style.display = "none";
+
+        // Hapus data gambar yang tersimpan
+        selectedImageData = "";
+      }
+
+      /**
+       * Mengatur fungsionalitas Autocomplete untuk kolom Sales Name.
+       */
+      const salperIdInput = document.getElementById("salperId");
+      const categorySelect = document.getElementById("category");
+      function setupAutocomplete() {
+        const input = document.getElementById("salesName");
+        const acContainer = document.getElementById("autocomplete-results");
+
+        const list = document.createElement("div");
+        list.className = "autocomplete-list";
+        list.style.display = "none";
+        acContainer.appendChild(list);
+
+        // Fungsi untuk mengaktifkan input Salper ID dan Category dropdown
+        function enableManualInput() {
+          salperIdInput.readOnly = false;
+          salperIdInput.placeholder =
+            "Isi Salper ID secara manual atau tanda '-' jika tidak ada";
+          categorySelect.disabled = false;
+        }
+
+        // Fungsi untuk mengunci input Salper ID dan Category dropdown (setelah memilih dari saran)
+        function lockInputs() {
+          salperIdInput.readOnly = true;
+          categorySelect.disabled = true;
+        }
+
+        // --- Listener utama untuk input nama ---
+        input.addEventListener("input", function () {
+          const q = this.value.trim().toLowerCase();
+
+          // 1. Reset dan Kunci sementara
+          salperIdInput.value = "";
+          categorySelect.selectedIndex = 0; // Reset category
+          lockInputs();
+
+          if (!q) {
             list.style.display = "none";
-            acContainer.appendChild(list);
+            return;
+          }
 
-            input.addEventListener("input", function () {
-                const q = this.value.trim().toLowerCase();
-                if (!q) {
-                    list.style.display = "none";
-                    return;
+          const matches = EMP.filter((e) =>
+            (e.name || "").toLowerCase().includes(q)
+          ).slice(0, 20);
+
+          if (matches.length === 0) {
+            // 2. LOGIC: Nama tidak ditemukan, izinkan input manual
+            list.innerHTML = `<button type="button" class="list-group-item list-group-item-action disabled">Nama tidak ditemukan. Isi manual di bawah.</button>`;
+            enableManualInput(); // Aktifkan input Salper ID dan Category
+          } else {
+            // 3. Nama ditemukan, tampilkan saran dan pastikan input terkunci
+            list.innerHTML = "";
+            lockInputs(); // Pastikan input terkunci jika ada saran
+
+            matches.forEach((m) => {
+              const item = document.createElement("button");
+              item.type = "button";
+              item.className = "list-group-item list-group-item-action";
+
+              // Tampilkan Nama dan ID
+              item.textContent = m.name + (m.id ? " — " + m.id : "");
+
+              item.addEventListener("click", function () {
+                // Ketika item dipilih:
+                input.value = m.name;
+                salperIdInput.value = m.id;
+                list.style.display = "none";
+                lockInputs(); // Kunci kembali setelah pemilihan
+
+                // **LOGIC PENTING: Isi Category otomatis**
+                // Cari dan pilih opsi kategori yang sesuai dengan m.category
+                for (let i = 0; i < categorySelect.options.length; i++) {
+                  if (categorySelect.options[i].value === m.category) {
+                    categorySelect.selectedIndex = i;
+                    break;
+                  }
                 }
-
-                const matches = EMP.filter((e) =>
-                    (e.name || "").toLowerCase().includes(q)
-                ).slice(0, 20);
-                if (matches.length === 0) {
-                    list.innerHTML = `<button type="button" class="list-group-item list-group-item-action disabled">Nama tidak ditemukan</button>`;
-                } else {
-                    list.innerHTML = "";
-                    matches.forEach((m) => {
-                        const item = document.createElement("button");
-                        item.type = "button";
-                        item.className = "list-group-item list-group-item-action";
-                        item.textContent = m.name + (m.id ? " — " + m.id : "");
-
-                        item.addEventListener("click", function () {
-                            input.value = m.name;
-                            document.getElementById("salperId").value = m.id;
-                            list.style.display = "none";
-                        });
-                        list.appendChild(item);
-                    });
-                }
-                list.style.display = "block";
+              });
+              list.appendChild(item);
             });
+          }
+          list.style.display = "block";
+        });
 
-            // Menyembunyikan daftar saat input kehilangan fokus
-            input.addEventListener("blur", function () {
-                setTimeout(() => {
-                    list.style.display = "none";
-                }, 200);
+        // Menyembunyikan daftar saat input kehilangan fokus
+        input.addEventListener("blur", function () {
+          setTimeout(() => {
+            list.style.display = "none";
+
+            // LOGIC: Jika user mengetik tapi tidak memilih, dan nama yang diketik
+            // TIDAK PERSIS cocok dengan data EMP, izinkan pengisian manual.
+            const exactMatch = EMP.find(
+              (e) => e.name.toLowerCase() === input.value.trim().toLowerCase()
+            );
+
+            if (!exactMatch && input.value.trim().length > 0) {
+              // Asumsi user memasukkan nama baru/salah ketik, biarkan input manual
+              enableManualInput();
+            } else if (exactMatch) {
+              // Jika user mengetik nama yang benar tanpa memilih dari list, kunci input
+              lockInputs();
+            } else if (input.value.trim().length === 0) {
+              // Jika input kosong, reset status input
+              lockInputs();
+              salperIdInput.placeholder = "Will be filled when you pick a name";
+            }
+          }, 200);
+        });
+      }
+
+      /**
+       * Memvalidasi data formulir sebelum dikirim.
+       * @param {Object} obj - Objek data formulir.
+       * @returns {string} Pesan error atau string kosong jika valid.
+       */
+      function validateForm(obj) {
+        if (!obj.salesName) return "Nama Sales wajib diisi.";
+        if (!obj.salperId) return "ID Salper wajib diisi (pilih dari saran).";
+        if (!obj.category) return "Kategori wajib dipilih.";
+        if (!obj.promotionTitle) return "Judul Promosi wajib dipilih.";
+        if (!obj.imageData) return "Bukti Screenshot wajib di upload.";
+        return "";
+      }
+
+      /**
+       * Mengirim data formulir ke Google Apps Script (GAS).
+       * @param {Object} formObj - Objek data formulir.
+       * @returns {Promise<Object>} Respons dari server.
+       */
+      async function submitToServer(formObj) {
+        try {
+          const response = await fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify(formObj),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mode: "no-cors",
+          });
+
+          // Karena no-cors, kita anggap sukses jika tidak ada error koneksi
+          return { success: true };
+        } catch (error) {
+          throw new Error("Submit failed: " + error.message);
+        }
+      }
+
+      /**
+       * Handler saat tombol submit diklik.
+       * @param {Event} e - Event submit.
+       */
+      async function onSubmitClick(e) {
+        e.preventDefault();
+
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        const formObj = {
+          salesName: document.getElementById("salesName").value.trim(),
+          salperId: document.getElementById("salperId").value.trim(),
+          category: document.getElementById("category").value,
+          promotionTitle: document.getElementById("promotionTitle").value,
+          comment: document.getElementById("comment").value.trim(),
+          imageData: selectedImageData,
+        };
+
+        const err = validateForm(formObj);
+        if (err) {
+          btn.disabled = false;
+          btn.textContent = "Submit";
+          Swal.fire({
+            icon: "error",
+            title: "Data Kurang Lengkap!",
+            text: err,
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        try {
+          const res = await submitToServer(formObj);
+
+          btn.disabled = false;
+          btn.textContent = "Submit";
+
+          if (res && res.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Berhasil!",
+              text: "Terima kasih telah Update Promosi.",
+              confirmButtonText: "OK",
+              timer: 5000,
+              timerProgressBar: true,
+            }).then(() => {
+              document.getElementById("submissionForm").reset();
+              document.getElementById("salperId").value = "";
+              removeImage();
             });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Gagal Submit!",
+              text:
+                "Error: " + (res && res.message ? res.message : "Server error"),
+              timer: 5000,
+              timerProgressBar: true,
+            });
+          }
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = "Submit";
+          Swal.fire({
+            icon: "error",
+            title: "Terjadi Kesalahan!",
+            text: "Submit gagal: " + err.message,
+            timer: 5000,
+            timerProgressBar: true,
+          });
         }
+      }
 
-        /**
-         * Memvalidasi data formulir sebelum dikirim.
-         * @param {Object} obj - Objek data formulir.
-         * @returns {string} Pesan error atau string kosong jika valid.
-         */
-        function validateForm(obj) {
-            if (!obj.salesName) return "Nama Sales wajib diisi.";
-            if (!obj.salperId) return "ID Salper wajib diisi (pilih dari saran).";
-            if (!obj.category) return "Kategori wajib dipilih.";
-            if (!obj.promotionTitle) return "Judul Promosi wajib dipilih.";
-            if (!obj.imageData) return "Bukti Screenshot wajib di upload.";
-            return "";
-        }
-
-        /**
-         * Mengirim data formulir ke Google Apps Script (GAS).
-         * @param {Object} formObj - Objek data formulir.
-         * @returns {Promise<Object>} Respons dari server.
-         */
-        async function submitToServer(formObj) {
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: "POST",
-                    body: JSON.stringify(formObj),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    mode: "no-cors",
-                });
-
-                // Karena no-cors, kita anggap sukses jika tidak ada error koneksi
-                return { success: true };
-            } catch (error) {
-                throw new Error("Submit failed: " + error.message);
-            }
-        }
-
-        /**
-         * Handler saat tombol submit diklik.
-         * @param {Event} e - Event submit.
-         */
-        async function onSubmitClick(e) {
-            e.preventDefault();
-
-            const btn = document.getElementById("submitBtn");
-            btn.disabled = true;
-            btn.innerHTML =
-                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
-
-            const formObj = {
-                salesName: document.getElementById("salesName").value.trim(),
-                salperId: document.getElementById("salperId").value.trim(),
-                category: document.getElementById("category").value,
-                promotionTitle: document.getElementById("promotionTitle").value,
-                comment: document.getElementById("comment").value.trim(),
-                imageData: selectedImageData,
-            };
-
-            const err = validateForm(formObj);
-            if (err) {
-                btn.disabled = false;
-                btn.textContent = "Submit";
-                Swal.fire({
-                    icon: "error",
-                    title: "Data Kurang Lengkap!",
-                    text: err,
-                    confirmButtonText: "OK",
-                });
-                return;
-            }
-
-            try {
-                const res = await submitToServer(formObj);
-
-                btn.disabled = false;
-                btn.textContent = "Submit";
-
-                if (res && res.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: "Terima kasih telah Upload Status",
-                        confirmButtonText: "OK",
-                        timer: 500000,
-                        timerProgressBar: true,
-                    }).then(() => {
-                        document.getElementById("submissionForm").reset();
-                        document.getElementById("salperId").value = "";
-                        removeImage();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Gagal Submit!",
-                        text:
-                            "Error: " + (res && res.message ? res.message : "Server error"),
-                        timer: 5000,
-                        timerProgressBar: true,
-                    });
-                }
-            } catch (err) {
-                btn.disabled = false;
-                btn.textContent = "Submit";
-                Swal.fire({
-                    icon: "error",
-                    title: "Terjadi Kesalahan!",
-                    text: "Submit gagal: " + err.message,
-                    timer: 5000,
-                    timerProgressBar: true,
-                });
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", init);
+      document.addEventListener("DOMContentLoaded", init);
     </script>
 
     <script>
-        // Blok gesture zoom (pinch)
-        document.addEventListener("gesturestart", function (e) {
-            e.preventDefault();
-        });
+      // Blok gesture zoom (pinch)
+      document.addEventListener("gesturestart", function (e) {
+        e.preventDefault();
+      });
 
-        // Blok double-tap zoom
-        let lastTouchEnd = 0;
-        document.addEventListener(
-            "touchend",
-            function (e) {
-                const now = new Date().getTime();
-                if (now - lastTouchEnd <= 300) {
-                    e.preventDefault();
-                }
-                lastTouchEnd = now;
-            },
-            false
-        );
+      // Blok double-tap zoom
+      let lastTouchEnd = 0;
+      document.addEventListener(
+        "touchend",
+        function (e) {
+          const now = new Date().getTime();
+          if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+          }
+          lastTouchEnd = now;
+        },
+        false
+      );
     </script>
-</body>
+  </body>
 </html>
