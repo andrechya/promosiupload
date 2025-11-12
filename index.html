@@ -613,6 +613,18 @@
 
         // Panggil hideLoader setelah SEMUA inisialisasi selesai di init()
         hideLoader();
+
+      // ⭐️ LOGIC BARU: Force Input ke Huruf Besar
+        salesNameInput.addEventListener('input', function() {
+          this.value = this.value.toUpperCase();
+        });
+        
+        // Salper ID hanya perlu di-force jika tidak dalam mode readonly
+        salperIdInput.addEventListener('input', function() {
+          if (!this.readOnly) {
+              this.value = this.value.toUpperCase();
+          }
+        });
       }
 
       /**
@@ -972,5 +984,6 @@
     </script>
   </body>
 </html>
+
 
 
