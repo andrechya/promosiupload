@@ -51,3 +51,7 @@ body {
   background-color: #102c57 !important;
   color: white;
 }
+
+.h1 {
+  font-weight: bold;
+}
