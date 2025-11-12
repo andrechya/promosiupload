@@ -200,6 +200,22 @@
         visibility: hidden !important;
       }
 
+      /* Style untuk icon dashboard saat hover (diambil dari dashboard.html) */
+      .gohome-icon {
+        color: #102c57;
+        transition: color 0.2s ease-in-out;
+      }
+
+      #openDashboard.btn-outline-primary:hover {
+        background-color: #102c57 !important;
+        border-color: #102c57 !important;
+        color: white !important;
+      }
+
+      #openDashboard.btn-outline-primary:hover .gohome-icon {
+        color: white !important;
+      }
+      
       /* Mobile-specific styles (max-width: 768px) */
       @media (max-width: 768px) {
         .container {
@@ -469,8 +485,14 @@
       let categories = [];
       let promotions = [];
       let selectedImageData = "";
+
+      // ⭐️ DEKLARASI GLOBAL UNTUK INPUT ELEMENTS (Fix ReferenceError)
+      // Diinisialisasi di sini karena elemen input sudah ada saat <script> ini dimuat
       const salesNameInput = document.getElementById("salesName");
       const salperIdInput = document.getElementById("salperId");
+      const categorySelect = document.getElementById("category");
+
+
       /**
        * Fungsi untuk memperbarui tampilan loader (pesan, progress bar, dan persentase).
        */
@@ -615,23 +637,21 @@
         // Panggil hideLoader setelah SEMUA inisialisasi selesai di init()
         hideLoader();
 
-      // ⭐️ LOGIC BARU: Force Input ke Huruf Besar
+        // ⭐️ LOGIC: Force Input ke Huruf Besar saat mengetik
         salesNameInput.addEventListener('input', function() {
-          this.value = this.value.toUpperCase();
+            this.value = this.value.toUpperCase();
         });
         
-        // Salper ID hanya perlu di-force jika tidak dalam mode readonly
         salperIdInput.addEventListener('input', function() {
-          if (!this.readOnly) {
-              this.value = this.value.toUpperCase();
-          }
+            // Hanya force jika tidak dalam mode readonly (mode readonly diisi oleh autocomplete)
+            if (!this.readOnly) {
+                this.value = this.value.toUpperCase();
+            }
         });
       }
 
       /**
        * Mengisi elemen <select> dengan array data.
-       * @param {string} id - ID elemen select.
-       * @param {Array<string>} arr - Array data untuk opsi.
        */
       function populateSelect(id, arr) {
         const sel = document.getElementById(id);
@@ -650,7 +670,6 @@
 
       /**
        * Menangani pemilihan file gambar dan menampilkan preview.
-       * @param {Event} e - Event perubahan input file.
        */
       function handleImageSelect(e) {
         const file = e.target.files[0];
@@ -720,8 +739,6 @@
       /**
        * Mengatur fungsionalitas Autocomplete untuk kolom Sales Name.
        */
-      const salperIdInput = document.getElementById("salperId");
-      const categorySelect = document.getElementById("category");
       function setupAutocomplete() {
         const input = document.getElementById("salesName");
         const acContainer = document.getElementById("autocomplete-results");
@@ -830,44 +847,39 @@
 
       /**
        * Memvalidasi data formulir sebelum dikirim.
-       * @param {Object} obj - Objek data formulir.
-       * @returns {string} Pesan error atau string kosong jika valid.
-       */
-      /**
-       * Memvalidasi data formulir sebelum dikirim.
-       * @param {Object} obj - Objek data formulir.
-       * @returns {string} Pesan error atau string kosong jika valid.
        */
       function validateForm(obj) {
-          if (!obj.salesName) return "Nama Sales wajib diisi.";
-          
-          if (!obj.salperId) return "ID Salper wajib diisi (pilih dari saran atau input manual).";
-      
-          // --- LOGIC BARU UNTUK MENCEGAH INPUT HANYA '0' ---
-          // 1. Membersihkan string dari semua karakter non-alfanumerik/non-angka.
-          // Ini mengubah '0-', '-0-', '0' menjadi '0'.
-          const cleanedSalperId = obj.salperId.trim().replace(/[^a-zA-Z0-9]/g, ''); 
-      
-          // 2. Mencegah nilai yang tersisa hanya "0".
-          if (cleanedSalperId === "0") {
-              return "ID Salper tidak boleh diisi dengan angka 0 saja, termasuk kombinasi seperti '0-'. Silakan masukkan ID yang valid atau '-' jika tidak ada ID.";
-          }
-          // --------------------------------------------------
-      
-          if (!obj.category) return "Kategori wajib dipilih.";
-          if (!obj.promotionTitle) return "Judul Promosi wajib dipilih.";
-          if (!obj.imageData) return "Bukti Screenshot wajib di upload.";
-          
-          return "";
+        if (!obj.salesName) return "Nama Sales wajib diisi.";
+        
+        if (!obj.salperId) return "ID Salper wajib diisi (pilih dari saran atau input manual).";
+        
+        // --- LOGIC UNTUK MENCEGAH INPUT HANYA '0' ---
+        // 1. Membersihkan string dari semua karakter non-alfanumerik/non-angka.
+        const cleanedSalperId = obj.salperId.trim().replace(/[^a-zA-Z0-9]/g, ''); 
+        
+        // 2. Mencegah nilai yang tersisa hanya "0".
+        if (cleanedSalperId === "0") {
+            return "ID Salper tidak boleh diisi dengan angka 0 saja, termasuk kombinasi seperti '0-'. Silakan masukkan ID yang valid atau '-' jika tidak ada ID.";
+        }
+        // --------------------------------------------------
+        
+        if (!obj.category) return "Kategori wajib dipilih.";
+        if (!obj.promotionTitle) return "Judul Promosi wajib dipilih.";
+        if (!obj.imageData) return "Bukti Screenshot wajib di upload.";
+        
+        return "";
       }
 
       /**
        * Mengirim data formulir ke Google Apps Script (GAS).
-       * @param {Object} formObj - Objek data formulir.
-       * @returns {Promise<Object>} Respons dari server.
        */
       async function submitToServer(formObj) {
         try {
+          // ⭐️ FINAL CHECK DAN UPPERCASE (Jika input event gagal)
+          // Walaupun sudah di-force di event listener, ini sebagai double check di layer submit
+          formObj.salesName = formObj.salesName.toUpperCase();
+          formObj.salperId = formObj.salperId.toUpperCase();
+          
           const response = await fetch(GAS_WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify(formObj),
@@ -886,7 +898,6 @@
 
       /**
        * Handler saat tombol submit diklik.
-       * @param {Event} e - Event submit.
        */
       async function onSubmitClick(e) {
         e.preventDefault();
@@ -897,8 +908,9 @@
           '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
 
         const formObj = {
-          salesName: document.getElementById("salesName").value.trim(),
-          salperId: document.getElementById("salperId").value.trim(),
+          // Ambil nilai yang sudah di-force uppercase saat input
+          salesName: salesNameInput.value.trim(), 
+          salperId: salperIdInput.value.trim(),
           category: document.getElementById("category").value,
           promotionTitle: document.getElementById("promotionTitle").value,
           comment: document.getElementById("comment").value.trim(),
@@ -934,7 +946,7 @@
               timerProgressBar: true,
             }).then(() => {
               document.getElementById("submissionForm").reset();
-              document.getElementById("salperId").value = "";
+              salperIdInput.value = "";
               removeImage();
             });
           } else {
@@ -985,8 +997,3 @@
     </script>
   </body>
 </html>
-
-
-
-
-
