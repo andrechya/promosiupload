@@ -55,3 +55,7 @@ body {
 .h1 {
   font-weight: bold;
 }
+
+.h5, h5 {
+  font-weight: bold;
+}
