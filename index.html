@@ -781,8 +781,8 @@
 
               item.addEventListener("click", function () {
                 // Ketika item dipilih:
-                input.value = m.name;
-                salperIdInput.value = m.id;
+                input.value = m.name.toUpperCase();
+                salperIdInput.value = m.id.toUpperCase();
                 list.style.display = "none";
                 lockInputs(); // Kunci kembali setelah pemilihan
 
@@ -984,6 +984,7 @@
     </script>
   </body>
 </html>
+
 
 
 
