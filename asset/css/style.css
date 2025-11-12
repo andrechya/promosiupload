@@ -46,3 +46,8 @@ body {
 #openDashboard.btn-outline-primary:hover .gohome-icon {
   color: white; /* Mengubah warna icon menjadi putih saat hover */
 }
+
+.modal-header {
+  background-color: #102c57 !important;
+  color: white;
+}
