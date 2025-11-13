@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Aptos Narrow";
-  src: url("./asset/font/Aptos-Narrow.ttf") format("truetype");
+  src: url("../font/Aptos-Narrow.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Aptos Narrow";
-  src: url("./asset/font/Aptos-Narrow-Bold.ttf") format("truetype");
+  src: url("../font/Aptos-Narrow-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
@@ -59,3 +59,4 @@ body {
 .h5, h5 {
   font-weight: bold;
 }
+
