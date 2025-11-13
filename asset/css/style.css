@@ -65,4 +65,11 @@ body {
     text-transform: uppercase !important;
 }
 
+.swal2-title {
+    text-transform: uppercase !important;
+}
+
+.swal2-confirm {
+    text-transform: uppercase !important;
+}
 
