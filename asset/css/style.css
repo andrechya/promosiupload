@@ -60,3 +60,9 @@ body {
   font-weight: bold;
 }
 
+.swal2-popup {
+    /* Mengubah semua teks di dalam modal (title, text, button text) menjadi UPPERCASE */
+    text-transform: uppercase !important;
+}
+
+
